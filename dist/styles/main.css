@@ -1,11 +1,26 @@
 body {
   box-sizing: border-box;
   font-family: arial, Helvetica, sans-serif;
+  font-size: 12px;
   margin: 0; }
+  body a {
+    color: #0192b5;
+    text-decoration: none; }
+    body a:hover {
+      text-decoration: underline; }
+
+.hidden {
+  display: none; }
+
+.bold {
+  font-weight: bold; }
 
 header > div, main > div, footer > div {
   margin: 0 auto;
   width: 1000px; }
+
+main > div {
+  overflow: auto; }
 
 header {
   height: 80px; }
@@ -18,24 +33,51 @@ main {
   float: left;
   width: 250px; }
 
+.search-categories {
+  list-style-type: none; }
+
 .search-results {
   overflow: auto;
   width: 750px; }
+
+.search-header {
+  float: left;
+  width: 50%; }
+
+.sortby {
+  list-style-type: none;
+  position: relative;
+  text-align: right; }
+  .sortby li {
+    background: #fff;
+    display: block;
+    font-size: 13px;
+    height: 35px;
+    line-height: 35px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    width: 100px; }
+    .sortby li:hover {
+      background: #f2fafd; }
+    .sortby li a:hover {
+      text-decoration: none; }
+
+.sortby-high {
+  top: 35px; }
+
+.sortby-low {
+  top: 70px; }
 
 .search-item {
   background: #fff;
   border: solid 1px #ececec;
   border-radius: 3px;
   float: left;
-  font-size: 12px;
   height: 210px;
   margin: 15px 10px;
   padding: 5px;
   width: 215px; }
-  .search-item a {
-    text-decoration: none; }
-    .search-item a:hover {
-      text-decoration: underline; }
 
 .search-item-img {
   background: #f5f5f1;

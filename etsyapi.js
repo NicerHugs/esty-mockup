@@ -4352,12 +4352,6 @@ var data = {
   }
 };
 
-$('.search-header').append(function() {
-  var string = "(" + data.count + " Results)";
-  return string;
-
-});
-
 var searchResults = data.results;
 
 function getCateogries(array) {
@@ -4372,23 +4366,83 @@ function getCateogries(array) {
   return categories;
 }
 
+//getCategories makes a list of all categories that appear on the items passed through. below we pass through all the items in our search results
+
+getCateogries(searchResults).forEach(function(item){
+  $('.search-categories').append('<li class="category"><a href="#">' + item + '</a></li>');
+});
+
 function filterCategories(array, category) {
-  array.filter(function(item){
-    return item.category_path.indexOf(category) >= 0;
+  return array.filter(function(item){
+    return (item.category_path.indexOf(category) >= 0);
   });
 }
 
 
-
-//get the cateogries, go over each one, and append it
-
-getCateogries(searchResults).forEach(function(item){
-  $('.search-categories').append('<li class="category">' + item + '</li>');
+$('.category').on('click', function(){
+  $(this).siblings().removeClass("bold");
+  $(this).addClass("bold");
+  var clickedCategory = $(this).text();
+  $('.search-item').remove();
+  $('.search-header').empty();
+  makeSearchResultItems(filterCategories(searchResults, clickedCategory));
 });
 
-//creates an individual search-item div for each search result returned, and packs each with all contents from the search results page.
+$('.sortby-low').on('click', function(){
+  var sortedArray = searchResults.sort(function compare(a, b) {
+    if (Number(a.price) < Number(b.price)) {
+      return -1;
+    }
+    if (Number(a.price) > Number(b.price)) {
+      return 1;
+    }
+    // a must be equal to b
+    return 0;
+  });
+  $('.search-item').remove();
+  $('.search-header').empty();
+  makeSearchResultItems(sortedArray);
+});
+
+$('.sortby-high').on('click', function(){
+  var sortedArray = searchResults.sort(function compare(a, b) {
+    if (Number(a.price) > Number(b.price)) {
+      return -1;
+    }
+    if (Number(a.price) < Number(b.price)) {
+      return 1;
+    }
+    // a must be equal to b
+    return 0;
+  });
+  $('.search-item').remove();
+  $('.search-header').empty();
+  makeSearchResultItems(sortedArray);
+});
+
+$('.sortby-recent').on('click', function(){
+  var sortedArray = searchResults.sort(function compare(a, b) {
+    if (Number(a.last_modified_tsz) < Number(b.last_modified_tsz)) {
+      return -1;
+    }
+    if (Number(a.last_modified_tsz) > Number(b.last_modified_tsz)) {
+      return 1;
+    }
+    // a must be equal to b
+    return 0;
+  });
+  $('.search-item').remove();
+  $('.search-header').empty();
+  makeSearchResultItems(sortedArray);
+});
+
+//makeSearchResultItems creates an individual search-item div for each search result returned, and packs each with all contents from the search results page.
 
 function makeSearchResultItems(array) {
+  $('.search-header').append(function() {
+    var string = "(" + array.length + " Results)";
+    return string;
+  });
   array.forEach(function(item) {
     $('.search-result-items').append(
       '\n<div class="search-item">\n' +
@@ -4410,3 +4464,4 @@ function makeSearchResultItems(array) {
   }
 
   makeSearchResultItems(searchResults);
+//
