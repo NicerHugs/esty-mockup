@@ -1,4 +1,4 @@
-var searchResults = {
+var data = {
   "count": 1992,
   "results": [{
     "listing_id": 202896536,
@@ -4353,54 +4353,60 @@ var searchResults = {
 };
 
 $('.search-header').append(function() {
-  var string = "(" + searchResults.count + " Results)";
+  var string = "(" + data.count + " Results)";
   return string;
 
 });
 
-var itemUrl =
-  searchResults.results.map(function(result){
+var searchResults = data.results;
 
+function getCateogries(array) {
+  var categories = [];
+  array.forEach(function(item) {
+    item.category_path.forEach(function(i) {
+      if (categories.indexOf(i) < 0){
+        categories.push(i);
+      }
+    });
   });
+  return categories;
+}
+
+function filterCategories(array, category) {
+  array.filter(function(item){
+    return item.category_path.indexOf(category) >= 0;
+  });
+}
+
+
+
+//get the cateogries, go over each one, and append it
+
+getCateogries(searchResults).forEach(function(item){
+  $('.search-categories').append('<li class="category">' + item + '</li>');
+});
+
+//creates an individual search-item div for each search result returned, and packs each with all contents from the search results page.
 
 function makeSearchResultItems(array) {
-  array.forEach(function(item){
-    $('.search-result-items').append('\n<div class="search-item">\n</div>');
-  });
-}
+  array.forEach(function(item) {
+    $('.search-result-items').append(
+      '\n<div class="search-item">\n' +
+            '<a class="search-item-link" href="' + item.url +'">\n' +
+              '<img class="search-item-img" src="' + item.MainImage.url_570xN + '" />\n' +
+            '</a>\n' +
+            '<div class="search-item-footer">\n' +
+              '<div class="search-item-title">' +
+                '<a href="' + item.url + '">' + item.title + '</a>\n' +
+              '</div>\n' +
+              '<div class="search-item-vendor">\n' +
+                '<a href="/shop/' + item.Shop.shop_name + '">' + item.Shop.shop_name + '</a>\n' +
+              '</div>\n' +
+              '<div class="search-item-cost">' + item.price + " " + item.currency_code + '</div>\n' +
+            '</div>\n' +
+          '</div>\n'
+      );
+    });
+  }
 
-function insertImg(array, location){
-  array.forEach(function(item, index) {
-    var html = '<img class="search-item-image" src="' + item + '" />\n';
-    $(location).eq(index).append(html);
-  });
-}
-
-function addHtmlElements(array, location, beforeHtml, afterHtml){
-  array.forEach(function(item, index) {
-    var html = "\n" + beforeHtml + item + afterHtml + "\n";
-    $(location).eq(index).append(html);
-  });
-}
-
-
-makeSearchResultItems(searchResults.results);
-addHtmlElements(searchResults.results.map(function(item){return item.url;}), '.search-item', '<a class="search-item-link" href="', '">\n</a>');
-insertImg(searchResults.results.map(function(item){
-  return item.MainImage.url_170x135;}), '.search-item-link');
-addHtmlElements(searchResults.results.map(function(item){
-  return "";}), '.search-item', '<div class="search-item-footer">', '</div>');
-addHtmlElements(searchResults.results.map(function(item){
-  return "";}), '.search-item-footer', '<div class="search-item-title">', '</div>');
-addHtmlElements(searchResults.results.map(function(item){return item.url;}), '.search-item-title', '<a class="search-item-link" href="', '">\n</a>');
-addHtmlElements(searchResults.results.map(function(item){return item.title;}), '.search-item-title a', "", "");
-addHtmlElements(searchResults.results.map(function(item){return item.Shop.shop_name;}), '.search-item-footer', '<div class="search-item-vendor">', '</div>');
-addHtmlElements(searchResults.results.map(function(item){return item.price;}), '.search-item-footer', '<div class="search-item-cost">', '</div>');
-
-
-
-//
-//   <div //="search-item-footer">\n<div class="search-item-title"><a href="item url">item //title</a></div>\n<div class="search-item-vendor"><a href="vendor page">item vendor</a></div>\n<div //="search-item-cost">item cost</div>\n</div>\n</div>';
-//  });
-//  return html;
-//});
+  makeSearchResultItems(searchResults);
